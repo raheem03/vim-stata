@@ -106,7 +106,7 @@ def run_yan():
     cmd = """osascript<< END
                  tell application id "{}"
                     {}
-                    DoCommandAsync "{}" with addToReview
+                    DoCommandAsync "do \\\"{}\\\"" with addToReview
                  end tell
                  END""".format("com.stata.stata16", "", temp_dofile)
     os.system(cmd) 
