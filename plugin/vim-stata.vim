@@ -96,7 +96,7 @@ function! RunDoLines()
 	let g:vimforstata_pathbin_ifnotset_windows = "C:\\Program Files(x86)\\Stata15\\Stata-64.exe"
 
 
-python << EOF
+py3 << EOF
 import vim
 import sys
 import os  
