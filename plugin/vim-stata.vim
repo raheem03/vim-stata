@@ -86,15 +86,6 @@ function! RunDoLines()
 	else
 		let args = shellescape(path,1)." > /dev/null"
 	endif
-	
-	" Likely a Linux platform running the KDE desktop
-	let s:haskdeinit = system("ps -e") =~ 'kdeinit'
-	" Likely a MacOS platform
-	let s:hasdarwin = system("uname -s") =~ 'Darwin'
-	" Set some default path variables in case the user does not specify needed paths
-	let g:vimforstata_pathbin_ifnotset_linux = "/usr/local/stata/xstata"
-	let g:vimforstata_pathbin_ifnotset_windows = "C:\\Program Files(x86)\\Stata15\\Stata-64.exe"
-
 
 py3 << EOF
 import vim
@@ -106,7 +97,7 @@ def run_yan():
     cmd = """osascript<< END
                  tell application id "{}"
                     {}
-                    DoCommandAsync "{}" with addToReview
+                    DoCommandAsync "do \\\"{}\\\"" with addToReview
                  end tell
                  END""".format("com.stata.stata16", "", temp_dofile)
     os.system(cmd) 
