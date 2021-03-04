@@ -148,7 +148,12 @@ import os
 def run_yan(): 
     temp_dofile = vim.eval("temp_dofile")
     print(temp_dofile)  
-    cmd = """osascript -e 'tell application "Finder" to open POSIX file "{0}"' -e 'tell application "{1}" to activate' &""".format(temp_dofile, "MacVim") 
+    cmd = """osascript<< END
+                 tell application id "{}"
+                    {}
+                    DoCommandAsync "do \\\"{}\\\"" with addToReview
+                 end tell
+                 END""".format("com.stata.stata16", "", temp_dofile)
     os.system(cmd) 
 run_yan()
 EOF
