@@ -95,52 +95,7 @@ function! RunDoLines()
 	let g:vimforstata_pathbin_ifnotset_linux = "/usr/local/stata/xstata"
 	let g:vimforstata_pathbin_ifnotset_windows = "C:\\Program Files(x86)\\Stata15\\Stata-64.exe"
 
-	if has("unix") && executable("gvfs-open") && !s:haskdeinit
-		" For Gnome-based Linux Desktop Environments
-		if (g:vimforstata_pathbin_sh != '')
-			exe "silent !gvfs-open | bash ".g:vimforstata_pathbin_sh." do ".args
-		elseif (g:vimforstata_pathbin != '')
-			exe "silent !gvfs-open ".g:vimforstata_pathbin." do ".args
-		else
-			exe "silent !gvfs-open ".g:vimforstata_pathbin_ifnotset_linux." do ".args
-		endif
-		let ret= v:shell_error
-	elseif (has("unix") && executable("xdg-open")) || s:haskdeinit
-		" For KDE-based or Various Other Linux Desktop Environments
-		if (g:vimforstata_pathbin_sh != '')
-			exe "silent !xdg-open | bash ".g:vimforstata_pathbin_sh." do ".args
-		elseif (g:vimforstata_pathbin != '')
-			exe "silent !xdg-open ".g:vimforstata_pathbin." do ".args
-		else
-			exe "silent !xdg-open ".g:vimforstata_pathbin_ifnotset_linux." do ".args
-		endif
-		let ret= v:shell_error
-	elseif has("unix") && executable("gtk-launch")
-		" For Linux Desktop Environments without the above, which would usually at least have gtk-launch
-		if (g:vimforstata_pathbin_sh != '')
-			exe "silent !gtk-launch | bash ".g:vimforstata_pathbin_sh." do ".args
-		elseif (g:vimforstata_pathbin != '')
-			exe "silent !gtk-launch ".g:vimforstata_pathbin." do ".args
-		else
-			exe "silent !gtk-launch ".g:vimforstata_pathbin_ifnotset_linux." do ".args
-		endif
-		let ret= v:shell_error
-	elseif has("unix") && executable("open") && s:hasdarwin
-		" For MacOS
-		exe "silent !open ".args
-		let ret= v:shell_error
-	elseif has("win32") || has("win64")
-		" For Windows, 32 or 64 bit
-    	exe "silent !start explorer ".shellescape(path,1)
-		let ret= v:shell_error
-		if (ret != 0)
-			exe "silent !start explorer ".g:vimforstata_pathbin_ifnotset_windows." do ".args
-		endif
 
-		" Delete the temp file after Vim closes in Windows
-		au VimLeave * exe "!del -y" temp
-	else 
-		" For MacOS if the above does not apply
 python << EOF
 import vim
 import sys
@@ -151,7 +106,7 @@ def run_yan():
     cmd = """osascript<< END
                  tell application id "{}"
                     {}
-                    DoCommandAsync "do \\\"{}\\\"" with addToReview
+                    DoCommandAsync "{}" with addToReview
                  end tell
                  END""".format("com.stata.stata16", "", temp_dofile)
     os.system(cmd) 
